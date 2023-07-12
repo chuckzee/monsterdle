@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MonsterApi {
-  final String baseUrl = "https://monsterdle.azurewebsites.net";
+  final String baseUrl = "https://monsterdle-backend.azurewebsites.net/";
 
   Future<Map<String, dynamic>> getMonsterData(String guessNumber) async {
     DateTime now = DateTime.now();
