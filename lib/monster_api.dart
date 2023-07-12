@@ -1,16 +1,41 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MonsterApi {
-  final String baseUrl = "https://your_api_url.com";
+  final String baseUrl = "https://monsterdle-backend.azurewebsites.net";
 
-  Future<Map<String, dynamic>> getMonsterData() async {
-    // TODO: Add the logic to determine the monsterId based on the current date
-    String monsterId = "monster_id";
+  Future<Map<String, dynamic>> getMonsterData(String guessNumber) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Check the value of correctGuess in shared preferences
+    bool? correctGuess = prefs.getBool('correctGuess') ?? false;
+    correctGuess == true ? guessNumber = '7' : guessNumber = guessNumber;
+    // if guessNumber is greater than 7, and correctGuess = false, then set guessNumber to 8
+    if (int.parse(guessNumber) > 7 && correctGuess == false) {
+      guessNumber = '7';
+    }
+    DateTime now = DateTime.now();
+    String monsterId =
+        ((now.year * 10000 + now.month * 100 + now.day) % 800).toString();
 
-    http.Response response = await http.get('$baseUrl/monster/$monsterId');
+    var url = Uri.parse('$baseUrl/monsters/$monsterId?guess=$guessNumber');
+    http.Response response = await http.get(url);
+    print('Response: ${response.body}'); // print the response
     return json.decode(response.body);
   }
 
-  // TODO: Add the method for submitting a guess
+  Future<bool> submitGuess(String guess, String guessNumber) async {
+    DateTime now = DateTime.now();
+    String monsterId =
+        ((now.year * 10000 + now.month * 100 + now.day) % 800).toString();
+    var url = Uri.parse('$baseUrl/monsters/$monsterId/guess?guess=$guess');
+    http.Response response = await http.get(url);
+    print('Response: ${response.body}'); // print the response
+    if (response.statusCode == 200) {
+      Map<String, dynamic> result = json.decode(response.body);
+      return result['correct'];
+    } else {
+      throw Exception('Failed to submit guess');
+    }
+  }
 }
