@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 class MonsterBlock extends StatefulWidget {
   final Map<String, dynamic> monster;
@@ -20,10 +21,8 @@ class _MonsterBlockState extends State<MonsterBlock> {
           if (widget.monster.containsKey('image'))
             Container(
               height: 250, // set the height of the container
-              child: Image.network(
-                widget.monster['image'],
-                fit: BoxFit.cover,
-              ),
+              child: Image.memory(
+                  base64Decode(widget.monster['image'].split(',').last)),
             ),
           // Display Size
           if (widget.monster.containsKey('name'))
