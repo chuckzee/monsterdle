@@ -1,6 +1,5 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MonsterApi {
   final String baseUrl = "https://monsterdle-backend.azurewebsites.net/";
@@ -22,7 +21,6 @@ class MonsterApi {
         ((now.year * 10000 + now.month * 100 + now.day) % 800).toString();
     var url = Uri.parse(
         '$baseUrl/monsters/$monsterId/guess?guess=$guess&guessNumber=$guessNumber');
-    print(url);
     http.Response response = await http.get(url);
     if (response.statusCode == 200) {
       bool result = json.decode(response.body);

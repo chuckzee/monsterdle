@@ -35,7 +35,23 @@ class _HomePageState extends State<HomePage> {
 
   void getLocalData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    guessCount = prefs.getInt('guessCount') ?? 0;
+    String? lastSavedTime = prefs.getString('lastSavedTime');
+
+    if (lastSavedTime != null) {
+      DateTime lastDate = DateTime.parse(lastSavedTime);
+      DateTime currentDate = DateTime.now();
+
+      if (lastDate.day < currentDate.day &&
+          lastDate.month == currentDate.month &&
+          lastDate.year == currentDate.year) {
+        guessCount = 0;
+      } else {
+        guessCount = prefs.getInt('guessCount') ?? 0;
+      }
+    } else {
+      guessCount = 0; // or prefs.getInt('guessCount') ?? 0;
+    }
+
     correctGuess = prefs.getBool('correctGuess') ?? false;
   }
 
@@ -51,7 +67,6 @@ class _HomePageState extends State<HomePage> {
         'Response: ${monster['id']} ${guessController.text} ${guessCount}'); // print the response
     bool? result =
         await api.submitGuess(guessController.text, guessCount.toString());
-    print("submit guess ${result}");
     setAnswerTruthyness(result);
     incrementGuessCount();
     setLocalData();
@@ -62,6 +77,7 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt('guessCount', guessCount);
     prefs.setBool('correctGuess', correctGuess ?? false);
+    prefs.setString('lastSavedTime', DateTime.now().toIso8601String());
   }
 
   void incrementGuessCount() {
@@ -98,11 +114,12 @@ class _HomePageState extends State<HomePage> {
               decoration: InputDecoration(
                 labelText: 'Enter your guess',
               ),
-              readOnly: correctGuess == true,
+              readOnly: (correctGuess == true || guessCount >= 7),
             ),
           ),
           ElevatedButton(
-            onPressed: correctGuess == true ? null : submitGuess,
+            onPressed:
+                (correctGuess == true || guessCount >= 7) ? null : submitGuess,
             child: Text('Submit Guess'),
           ),
         ],

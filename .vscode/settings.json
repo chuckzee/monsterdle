@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/6137e8a8-2e71-4b8c-b895-daade3e67b15/resourceGroups/DefaultResourceGroup-EUS2/providers/Microsoft.Web/sites/monsterdle",
+    "appService.deploySubpath": "build\\web"
+}
