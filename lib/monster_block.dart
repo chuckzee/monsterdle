@@ -26,7 +26,7 @@ class _MonsterBlockState extends State<MonsterBlock> {
             ),
           // Display Size
           if (widget.monster.containsKey('name'))
-            Text('Size: ${widget.monster['name']}'),
+            Text('Name: ${widget.monster['name']}'),
           if (widget.monster.containsKey('size'))
             Text('Size: ${widget.monster['size']}'),
           if (widget.monster.containsKey('challenge'))

@@ -14,12 +14,23 @@ class _HomePageState extends State<HomePage> {
   TextEditingController guessController = TextEditingController();
   bool? correctGuess;
   int guessCount = 0;
-  void getMonster({bool value = false}) async {
-    Map<String, dynamic> data =
-        await api.getMonsterData(value ? '7' : guessCount.toString());
-    setState(() {
-      monster = data;
-    });
+
+  void getMonster() async {
+    if (correctGuess == true) {
+      Map<String, dynamic> data = await api.getMonsterData("7");
+      setState(() {
+        monster = data;
+      });
+      print("correct call ${correctGuess}");
+    } else {
+      getLocalData();
+      Map<String, dynamic> data =
+          await api.getMonsterData(guessCount.toString());
+      setState(() {
+        monster = data;
+      });
+      print("correct call ${guessCount}");
+    }
   }
 
   void getLocalData() async {
@@ -32,12 +43,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getLocalData();
-    if (correctGuess == true) {
-      print('guessCount in initState: ${correctGuess}');
-      getMonster(value: true);
-    } else {
-      getMonster();
-    }
+    getMonster();
   }
 
   void submitGuess() async {
@@ -45,20 +51,11 @@ class _HomePageState extends State<HomePage> {
         'Response: ${monster['id']} ${guessController.text} ${guessCount}'); // print the response
     bool? result =
         await api.submitGuess(guessController.text, guessCount.toString());
-    setState(() {
-      correctGuess = result;
-    });
+    print("submit guess ${result}");
+    setAnswerTruthyness(result);
     incrementGuessCount();
     setLocalData();
-
-    if (correctGuess != true) {
-      getMonster();
-    } else {
-      Map<String, dynamic> data = await api.getMonsterData('7');
-      setState(() {
-        monster = data;
-      });
-    }
+    getMonster();
   }
 
   void setLocalData() async {
@@ -72,6 +69,10 @@ class _HomePageState extends State<HomePage> {
     setLocalData();
   }
 
+  void setAnswerTruthyness(bool value) {
+    correctGuess = value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +84,7 @@ class _HomePageState extends State<HomePage> {
           if (correctGuess == true) ...[
             Text('You got it!', style: TextStyle(fontSize: 24)),
           ],
-          if (correctGuess == false && guessCount >= 8) ...[
+          if (correctGuess == false && guessCount >= 7) ...[
             Text('Better luck next time.', style: TextStyle(fontSize: 24)),
           ],
           MonsterBlock(

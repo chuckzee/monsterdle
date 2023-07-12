@@ -3,20 +3,15 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MonsterApi {
-  final String baseUrl = "https://monsterdle-backend.azurewebsites.net";
+  final String baseUrl = "http://localhost:3000";
 
   Future<Map<String, dynamic>> getMonsterData(String guessNumber) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? correctGuess = prefs.getBool('correctGuess') ?? false;
-    correctGuess == true ? guessNumber = '7' : guessNumber = guessNumber;
-    if (int.parse(guessNumber) > 7 && correctGuess == false) {
-      guessNumber = '7';
-    }
     DateTime now = DateTime.now();
     String monsterId =
         ((now.year * 10000 + now.month * 100 + now.day) % 800).toString();
 
-    var url = Uri.parse('$baseUrl/monsters/$monsterId?guess=$guessNumber');
+    var url =
+        Uri.parse('$baseUrl/monsters/$monsterId?guessNumber=$guessNumber');
     http.Response response = await http.get(url);
     return json.decode(response.body);
   }
@@ -25,11 +20,13 @@ class MonsterApi {
     DateTime now = DateTime.now();
     String monsterId =
         ((now.year * 10000 + now.month * 100 + now.day) % 800).toString();
-    var url = Uri.parse('$baseUrl/monsters/$monsterId/guess?guess=$guess');
+    var url = Uri.parse(
+        '$baseUrl/monsters/$monsterId/guess?guess=$guess&guessNumber=$guessNumber');
+    print(url);
     http.Response response = await http.get(url);
     if (response.statusCode == 200) {
-      Map<String, dynamic> result = json.decode(response.body);
-      return result['correct'];
+      bool result = json.decode(response.body);
+      return result;
     } else {
       throw Exception('Failed to submit guess');
     }
