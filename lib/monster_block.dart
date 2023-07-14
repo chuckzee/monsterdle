@@ -24,44 +24,40 @@ class _MonsterBlockState extends State<MonsterBlock> {
               child: Image.memory(
                   base64Decode(widget.monster['image'].split(',').last)),
             ),
-          // Display Size
+          // Display Name
           if (widget.monster.containsKey('name'))
             Text('Name: ${widget.monster['name']}'),
+          // Display Size
           if (widget.monster.containsKey('size'))
             Text('Size: ${widget.monster['size']}'),
-          if (widget.monster.containsKey('challenge'))
-            Text('CR: ${widget.monster['challenge']}'),
-          // Display ac
+          // Display CR
+          if (widget.monster.containsKey('cr'))
+            Text(
+                'CR: ${widget.monster['cr'] != "-" ? widget.monster['cr'] : "?"}'),
+          // Display HP
           if (widget.monster.containsKey('hp'))
             Text('HP: ${widget.monster['hp']}'),
-          // Display alignment
+          // Display Alignment
           if (widget.monster.containsKey('alignment'))
-            Text('Alignment: ${widget.monster['alignment']}'),
-          // Display ac
+            Text(
+                'Alignment: ${widget.monster['alignment'] != "-" ? widget.monster['alignment'] : "unaligned or unknown"}'),
+          // Display AC
           if (widget.monster.containsKey('ac'))
             Text('AC: ${widget.monster['ac']}'),
-          // Display str
-          if (widget.monster.containsKey('str'))
-            Text('Strength: ${widget.monster['str']}'),
-          if (widget.monster.containsKey('dex'))
-            Text('Dexterity: ${widget.monster['dex']}'),
-          if (widget.monster.containsKey('con'))
-            Text('Constitution: ${widget.monster['con']}'),
-          if (widget.monster.containsKey('int'))
-            Text('Intelligence: ${widget.monster['int']}'),
-          if (widget.monster.containsKey('wis'))
-            Text('Wisdom: ${widget.monster['wis']}'),
-          if (widget.monster.containsKey('cha'))
-            Text('Charisma: ${widget.monster['cha']}'),
-          if (widget.monster.containsKey('senses'))
-            Text('Senses: ${widget.monster['senses']}'),
-          if (widget.monster.containsKey('languages'))
-            Text('Languages: ${widget.monster['languages']}'),
-          if (widget.monster.containsKey('additional'))
-            Text('Additional Information: ${widget.monster['additional']}'),
+          // Display Type
+          if (widget.monster.containsKey('type'))
+            Text('Type: ${widget.monster['type']}'),
+          // Display Legendary
+          if (widget.monster.containsKey('legendary'))
+            Text(
+                'Is Legendary?: ${widget.monster['legendary'] != "-" ? widget.monster['legendary'] : "Nope"}'),
+          // Display Movement
+          if (widget.monster.containsKey('movement'))
+            Text(
+                'Movement Type: ${widget.monster['movement'] != "-" ? widget.monster['movement'] : "ground speed or stationary"}'),
+          // Display Sourcebook
           if (widget.monster.containsKey('source'))
             Text('Sourcebook: ${widget.monster['source']}'),
-          // and so on for all fields
         ],
       ),
     );
