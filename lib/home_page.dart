@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:monsterdle/monster_block.dart';
 import 'package:monsterdle/monster_api.dart';
 import 'package:monsterdle/data/monster_data.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(MaterialApp(
+      home: HomePage(),
+      debugShowCheckedModeBanner: false,
+    ));
+  });
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // status bar color
+    statusBarIconBrightness: Brightness.dark, // status bar icons
+    systemNavigationBarColor: Colors.white, // navigation bar color
+    systemNavigationBarIconBrightness: Brightness.dark, // navigation bar icons
+  ));
+}
 
 class HomePage extends StatefulWidget {
   @override
